@@ -1,6 +1,6 @@
 pragma solidity ^0.4.20;
 
-contract VotingSystem {
+contract VotingSystesm {
     
     // This sctructure holds info about the person who votes
     struct Voter {
@@ -26,7 +26,7 @@ contract VotingSystem {
     // Our constructor assigns names of candidates to the Candidate 
     // array we stor on block chain.
     // Also stors the contractOwner address on the block chain
-    function VotingSystem (bytes32[] candidateNames) {
+    function VotingSystesm (bytes32[] candidateNames) {
         contractOwner = msg.sender;
         
         for (uint8 i = 0; i < candidateNames.length; i++) {
@@ -52,12 +52,10 @@ contract VotingSystem {
         
         candidates[voteFor].numberOfVotes += 1;
     }
-
-
-    // This function returns the candidate with most votes. 
-    function winningCandidate () constant returns(uint8 winnerName) {
+    
+    function winningCandidate () constant returns(string winnerName){
         
-        uint8 tempWinnerName;
+        bytes32 tempWinnerName;
         uint maxVote = 0;
         
         for (uint8 i = 0; i < candidates.length; i++) {
@@ -65,18 +63,33 @@ contract VotingSystem {
             if (candidates[i].numberOfVotes > maxVote) {
                 
                 maxVote = candidates[i].numberOfVotes;
-                tempWinnerName = i;
+                tempWinnerName = candidates[i].name;
                 
             }
 
         }
         
-        return tempWinnerName;
+        return bytes32ToString(tempWinnerName);
         
 
     }
     
-    
-    
+    function bytes32ToString(bytes32 x) constant returns (string) {
+        bytes memory bytesString = new bytes(32);
+        uint charCount = 0;
+        for (uint j = 0; j < 32; j++) {
+            byte char = byte(bytes32(uint(x) * 2 ** (8 * j)));
+            if (char != 0) {
+                bytesString[charCount] = char;
+                charCount++;
+            }
+        }
+        bytes memory bytesStringTrimmed = new bytes(charCount);
+        for (j = 0; j < charCount; j++) {
+            bytesStringTrimmed[j] = bytesString[j];
+        }
+        return string(bytesStringTrimmed);
+    }
+        
     
 }
